@@ -1,26 +1,100 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* === Colors === */
+  --color-primary: #4F46E5;
+  --color-primary-light: #818CF8;
+  --color-navy: #1A1D2E;
+  --color-surface: #F7F8FA;
+  --color-card-light: #F4F5F6;
+  --color-fg: #000000;
+  --color-fg-on-dark: #EEF0FE;
+  --color-muted: #6D7882;
+  --color-muted-on-dark: #D9D9D9;
+
+  /* === Typography (size + lh + tracking + weight 페어) === */
+  --text-display: 56px;
+  --text-display--line-height: 1.4;
+  --text-display--letter-spacing: -1.4px;
+  --text-display--font-weight: 700;
+
+  --text-h2: 40px;
+  --text-h2--line-height: 1.4;
+  --text-h2--letter-spacing: -1px;
+  --text-h2--font-weight: 700;
+
+  --text-h3: 24px;
+  --text-h3--line-height: 1.4;
+  --text-h3--letter-spacing: -0.6px;
+  --text-h3--font-weight: 700;
+
+  --text-lead: 20px;
+  --text-lead--line-height: 1.4;
+  --text-lead--letter-spacing: -0.3px;
+  --text-lead--font-weight: 500;
+
+  --text-body: 18px;
+  --text-body--line-height: 1.4;
+  --text-body--letter-spacing: -0.27px;
+  --text-body--font-weight: 500;
+
+  --text-eyebrow: 20px;
+  --text-eyebrow--line-height: 1.4;
+  --text-eyebrow--letter-spacing: -0.3px;
+  --text-eyebrow--font-weight: 500;
+
+  --text-caption: 14px;
+  --text-caption--line-height: 1.5;
+  --text-caption--letter-spacing: 0;
+  --text-caption--font-weight: 500;
+
+  /* === Radius === */
+  --radius-card: 12px;
+  --radius-pill: 9999px;
+
+  /* === Container === */
+  --container-content: 1200px;
+
+  /* === Animations === */
+  --animate-float: float 2s ease-in-out infinite;
+  --animate-accordion-down: accordion-down 200ms ease-out;
+  --animate-accordion-up: accordion-up 200ms ease-out;
+
+  /* === Font family === */
+  --font-sans: var(--font-pretendard), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes accordion-down {
+  from { height: 0; }
+  to { height: var(--radix-accordion-content-height); }
+}
+
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to { height: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-accordion-down,
+  .animate-accordion-up {
+    animation: none;
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
