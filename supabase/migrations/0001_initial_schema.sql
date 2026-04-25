@@ -2,6 +2,7 @@
 -- Signal360 — Initial Schema (0001)
 -- ----------------------------------------------------------------------------
 -- Tables (7): users, admin_users, products, orders, payments, refunds, deliveries
+-- Functions: set_updated_at, is_admin, generate_order_number
 -- Triggers: updated_at auto-set on users/products/orders/payments/deliveries
 -- RLS: enabled on all tables. Service-role key bypasses RLS for server-side ops.
 -- Seed: 4 products (analysis-general, analysis-silver, replan-silver, replan-general)
@@ -76,7 +77,7 @@ create table public.products (
   description     text,
   category        text not null check (category in ('analysis', 'replan')),
   tier            text not null check (tier in ('general', 'silver')),
-  price           integer not null check (price >= 0),
+  price           integer not null check (price > 0),
   display_order   integer not null default 0,
   is_active       boolean not null default true,
   thumbnail_url   text,
@@ -151,10 +152,10 @@ create table public.refunds (
   id            uuid primary key default gen_random_uuid(),
   payment_id    uuid not null references public.payments(id) on delete restrict,
   order_id      uuid not null references public.orders(id)   on delete restrict,
-  amount        integer not null check (amount >= 0),
+  amount        integer not null check (amount > 0),
   reason        text not null,
   status        text not null default 'requested'
-                check (status in ('requested', 'approved', 'completed', 'failed')),
+                check (status in ('requested', 'processing', 'completed', 'failed')),
   processed_by  uuid references auth.users(id) on delete set null,
   raw_response  jsonb,
   requested_at  timestamptz not null default now(),
@@ -178,6 +179,28 @@ create table public.deliveries (
   created_at      timestamptz not null default now(),
   updated_at      timestamptz not null default now()
 );
+
+
+-- ----------------------------------------------------------------------------
+-- generate_order_number() — 'SG-YYYYMMDD-NNNN' (KST). NNNN = today's count + 1.
+-- Note: race-condition-free under serializable isolation only; for typical B2B
+-- volumes the count(*)+1 pattern is acceptable.
+-- ----------------------------------------------------------------------------
+create or replace function public.generate_order_number()
+returns text
+language plpgsql
+as $$
+declare
+  today_str text;
+  seq_num integer;
+begin
+  today_str := to_char(now() at time zone 'Asia/Seoul', 'YYYYMMDD');
+  select count(*) + 1 into seq_num
+  from public.orders
+  where order_number like 'SG-' || today_str || '-%';
+  return 'SG-' || today_str || '-' || lpad(seq_num::text, 4, '0');
+end;
+$$;
 
 
 -- ============================================================================
@@ -235,9 +258,9 @@ create policy "admin_users_admin_all" on public.admin_users for all
   with check (public.is_admin());
 
 
--- ---- products (public read, admin write) -----------------------------------
-create policy "products_select_all" on public.products for select
-  using (true);
+-- ---- products (public sees only ACTIVE, admin writes) ----------------------
+create policy "products_select_active" on public.products for select
+  using (is_active = true);
 
 create policy "products_admin_insert" on public.products for insert
   with check (public.is_admin());
