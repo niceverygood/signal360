@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Container } from "@/app/components/ui/Container";
 import { SectionHeader } from "@/app/components/ui/SectionHeader";
 import { ServiceCard } from "@/app/components/ui/ServiceCard";
@@ -64,7 +65,13 @@ export function Section5() {
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
             {products.map((p) => (
-              <ServiceCard key={p.id} product={p} />
+              <Link
+                key={p.id}
+                href={`/checkout?product=${p.id}`}
+                className="block rounded-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4"
+              >
+                <ServiceCard product={p} />
+              </Link>
             ))}
           </div>
         </div>
