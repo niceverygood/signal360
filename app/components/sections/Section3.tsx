@@ -6,7 +6,7 @@ export function Section3() {
     <section id="stats" className="relative bg-navy xl:h-[433px]">
       <div className="relative h-[280px] xl:absolute xl:right-0 xl:top-0 xl:w-1/2 xl:h-full">
         <Image
-          src="/img/stats-coins-chart.png"
+          src="/img_nobg/chart.png"
           alt=""
           fill
           sizes="(min-width: 1280px) 50vw, 100vw"

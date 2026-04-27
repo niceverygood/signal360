@@ -2,10 +2,10 @@ import Image from "next/image";
 import type { CheckoutProduct } from "@/app/checkout/CheckoutForm";
 
 const SLUG_TO_IMAGE: Record<string, string> = {
-  "analysis-general": "/img/service-analysis-general.png",
-  "analysis-silver": "/img/service-analysis-silver.png",
-  "replan-silver": "/img/service-replan-silver.png",
-  "replan-general": "/img/service-replan-general.png",
+  "analysis-general": "/img_nobg/service-1.png",
+  "analysis-silver": "/img_nobg/service-2.png",
+  "replan-silver": "/img_nobg/service-3.png",
+  "replan-general": "/img_nobg/service-4.png",
 };
 
 export function ProductSummaryCard({ product }: { product: CheckoutProduct }) {

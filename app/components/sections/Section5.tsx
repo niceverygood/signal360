@@ -19,7 +19,7 @@ const products: Product[] = [
     price: 90000,
     category: "analysis",
     tier: "general",
-    imageSrc: "/img/service-analysis-general.png",
+    imageSrc: "/img_nobg/service-1.png",
   },
   {
     id: "analysis-silver",
@@ -27,7 +27,7 @@ const products: Product[] = [
     price: 80000,
     category: "analysis",
     tier: "silver",
-    imageSrc: "/img/service-analysis-silver.png",
+    imageSrc: "/img_nobg/service-2.png",
   },
   {
     id: "replan-silver",
@@ -35,7 +35,7 @@ const products: Product[] = [
     price: 70000,
     category: "replan",
     tier: "silver",
-    imageSrc: "/img/service-replan-silver.png",
+    imageSrc: "/img_nobg/service-3.png",
   },
   {
     id: "replan-general",
@@ -43,7 +43,7 @@ const products: Product[] = [
     price: 80000,
     category: "replan",
     tier: "general",
-    imageSrc: "/img/service-replan-general.png",
+    imageSrc: "/img_nobg/service-4.png",
   },
 ];
 

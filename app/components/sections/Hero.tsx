@@ -15,7 +15,7 @@ export function Hero() {
   return (
     <section id="top" className="relative h-[874px] overflow-hidden">
       <Image
-        src="/img/hero-cityscape.png"
+        src="/img_nobg/hero.png"
         alt=""
         fill
         priority
