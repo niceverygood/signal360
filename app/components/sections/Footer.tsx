@@ -3,11 +3,11 @@ import Link from "next/link";
 import { Container } from "@/app/components/ui/Container";
 
 const companyInfo = {
-  name: "(주) 이루다 컴퍼니",
-  ceo: "TBD",
-  businessNumber: "TBD",
-  address: "TBD",
-  email: "TBD",
+  name: "이루다컴퍼니",
+  ceo: "이주훈",
+  businessNumber: "562-81-02354",
+  address: "서울 구로구 디지털로 306, 대륭포스트타워 2차 316호",
+  email: "seoulsignal360@gmail.com",
   copyrightYear: 2026,
 };
 
