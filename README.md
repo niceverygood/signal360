@@ -11,14 +11,41 @@ npm run dev          # http://localhost:3000
 
 `.env.local` 필요 (gitignored):
 ```
+# === Supabase ===
 NEXT_PUBLIC_SUPABASE_URL=...
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
 SUPABASE_SERVICE_ROLE_KEY=...           # 서버 전용 (RLS 우회)
-SEEDPAY_MID=...                         # 결제 테스트 시
-SEEDPAY_MERCHANT_KEY=...
-SEEDPAY_API_BASE=https://devpay.seedpayments.co.kr
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
+
+# === SeedPay (PG) ===
+SEEDPAY_MID=ONsig0001m                  # 운영 MID (이루다컴퍼니)
+SEEDPAY_MERCHANT_KEY=...                # 본부장님이 4/28 카톡으로 공유
+SEEDPAY_API_BASE=https://...            # ⚠️ 가이드 PDF에서 운영 URL 확인 필요
+                                        #   (개발: https://devpay.seedpayments.co.kr)
+SEEDPAY_WEBHOOK_ENFORCE_IP=false        # 시드페이 발신 IP 확인 후 true 권장
+
+# === Site ===
+NEXT_PUBLIC_SITE_URL=https://signal360.vercel.app    # 운영
+                                                      # 로컬: http://localhost:3000
 ```
+
+## Vercel 배포 환경변수 체크리스트 (운영)
+
+Vercel Project → Settings → Environment Variables → Production 에 7개 등록:
+
+| Key | 값 | 비고 |
+|---|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase 프로젝트 URL | Supabase Settings → API |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | anon public key | 〃 |
+| `SUPABASE_SERVICE_ROLE_KEY` | service_role key | 〃 (절대 클라 노출 X) |
+| `SEEDPAY_MID` | `ONsig0001m` | 본부장 4/28 공유 |
+| `SEEDPAY_MERCHANT_KEY` | `ZFr2fv/SYi...8Q==` | 본부장 4/28 공유 |
+| `SEEDPAY_API_BASE` | **(가이드 PDF 확인)** | 운영 도메인. 안 넣으면 dev로 호출됨 |
+| `NEXT_PUBLIC_SITE_URL` | `https://signal360.vercel.app` | 결제 returnUrl 베이스 |
+
+> **SEEDPAY_API_BASE만 미확인 상태**입니다. 본부장님이 받으신 가이드 PDF
+> (`가맹점 연동 가이드_20260414.zip`) 안에 운영(production) API 도메인이
+> 명시돼 있을 겁니다. 보통 `https://pay.seedpayments.co.kr` 류로 추정되지만
+> 정확한 값은 PDF에서 확인 후 입력해주세요.
 
 ## Database Schema
 
@@ -60,11 +87,17 @@ Supabase Dashboard SQL Editor에 붙여넣고 Run.
 - `/` — 랜딩 페이지
 - `/checkout?product=<slug>` — 결제 페이지
 - `/checkout/success`, `/checkout/fail`
-- `/terms`, `/privacy` (placeholder)
+- `/terms`, `/privacy`
+- `/login` — 카카오 로그인 (Supabase OAuth)
+- `/account` — 회원 프로필 + 주문 내역
+- `/auth/callback` — OAuth 콜백 핸들러
+- `POST /auth/signout` — 로그아웃
 
 ### Admin
 - `/admin/login` — 관리자 로그인
 - `/admin` — 대시보드 (super_admin/admin/staff)
+- `/admin/orders` — 주문 리스트 (필터 + 검색 + 페이지네이션)
+- `/admin/orders/[id]` — 주문 상세 + 상태 변경 + 환불 + 배송
 - `/admin/*` — `proxy.ts`에서 인증 + admin_users 검증
 
 ### API
